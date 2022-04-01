@@ -1,25 +1,36 @@
 import * as React from "react"
-
+import SulfiteTab from '../tabs/SulfiteTab'
+import BlendingTab from '../tabs/BlendingTab' 
 
 class IndexPage extends React.Component {
 
   // styles
+
   pageStyles = {
     color: "#232129",
     padding: 96,
     fontFamily: "-apple-system, Roboto, sans-serif, serif",
   }
+
   headingStyles = {
     marginTop: 0,
     marginBottom: 64,
     maxWidth: 320,
   }
+
   headingAccentStyles = {
     color: "#663399",
   }
+
   paragraphStyles = {
-    marginBottom: 48,
+    width: 1080,
+    border: '1px solid #e5e7e8',
+    backgroundColor: '#f6f8fa',
+    paddingTop: 8,
+    paddingLeft: 18,
+    paddingBottom: 18
   }
+
   codeStyles = {
     color: "#8A6534",
     padding: 4,
@@ -27,10 +38,12 @@ class IndexPage extends React.Component {
     fontSize: "1.25rem",
     borderRadius: 4,
   }
+
   listStyles = {
     marginBottom: 96,
     paddingLeft: 0,
   }
+
   listItemStyles = {
     fontWeight: 300,
     fontSize: 24,
@@ -45,12 +58,27 @@ class IndexPage extends React.Component {
     verticalAlign: "5%",
   }
 
-  descriptionStyle = {
-    color: "#232129",
-    fontSize: 14,
-    marginTop: 10,
-    marginBottom: 0,
-    lineHeight: 1.25,
+  navStyles = {
+    display: 'flex',
+    gap: 8,
+    paddingLeft: 36,
+    paddingBottom: 18
+  }
+
+  navItemStyleOne = {
+    backgroundColor: "#24292f",
+    color: "#f6f8fa",
+    fontWeight: "bold",
+    padding: 10,
+    fontSize: 18
+  }
+
+  navItemStyleTwo = {
+    backgroundColor: "#e5e7e8",
+    color: "#57606a",
+    fontWeight: "bold",
+    padding: 10,
+    fontSize: 18
   }
 
   badgeStyle = {
@@ -70,32 +98,11 @@ class IndexPage extends React.Component {
   }
 
   // data
+
   links = []
 
   state = {
-    gallonsOfWineInput: "",
-    so2DilutedSolutionVolume: "",
-    sulfiteResult: "",
-    kmbsResult: ""
-  }
-
-  handleGallonsOfWineInputChange = (e)=>{
-    this.setState({ gallonsOfWineInput: e.target.value})
-  }
-  
-  handleSo2DilutedSolutionVolumeChange = (e)=>{
-    this.setState({ so2DilutedSolutionVolume: e.target.value})
-  }
-  
-  calculateSulfiteAddition = (e)=>{
-    e.preventDefault()
-    let wineVolume = parseFloat(this.state.gallonsOfWineInput)
-    let so2PartsPerMillion = parseFloat(this.state.so2DilutedSolutionVolume)
-  
-    let so2DilutedSolutionVolume = 0.0378536 * wineVolume * so2PartsPerMillion
-    let kmbs = (0.006571875 * wineVolume * so2PartsPerMillion).toString()
-  
-    this.setState({ sulfiteResult: so2DilutedSolutionVolume.toString(), kmbsResult: kmbs})
+    sulfite: true
   }
 
   render(){
@@ -107,21 +114,14 @@ class IndexPage extends React.Component {
           <br />
           <span style={this.headingAccentStyles}>— made incredibly easy, fast, convenient. </span>
         </h1>
+        <nav style={this.navStyles}>
+          <button style={this.navItemStyleOne} onClick={()=>{this.setState({sulfite: true})}}>Sulfite</button>
+          <button style={this.navItemStyleTwo} onClick={()=>{this.setState({sulfite: false})}}>Blending</button>
+        </nav>
         <p style={this.paragraphStyles}>
-        <p>Input the info below: </p>
-          <p>
-            Gallons of wine: 
-            <input type="text" onChange={this.handleGallonsOfWineInputChange} value={this.state.gallonsOfWineInput} id="wine_volume_input_field" />
-          </p>
-          <p>
-            ppm (parts per million) of SO2 addition: 
-            <input type="text" onChange={this.handleSo2DilutedSolutionVolumeChange} value={this.state.so2DilutedSolutionVolume} id="wine_volume_input_field" />
-          </p>
-          <p>
-            <input type="button" value="Calculate" onClick={this.calculateSulfiteAddition}/>
-          </p>
+          { this.state.sulfite ? <SulfiteTab/> : <BlendingTab /> }
+          <div/>
         </p>
-        <p>I suggest you add <span id="result_element" style={this.codeStyles}>{this.state.sulfiteResult}</span> mL of diluted, 10% concentration SO2 solution, or <span id="kmbs_element" style={this.codeStyles}>{this.state.kmbsResult}</span> grams of KMBS to your wine.</p>
       </main>
     )
   }
